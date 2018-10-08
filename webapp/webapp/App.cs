@@ -8,7 +8,7 @@ namespace app
     {
         public static void Main()
         {
-            lighttool.canvas.Cool();
+
             // Write a message to the Console
             Console.WriteLine("Welcome to Bridge.NET 2018");
 

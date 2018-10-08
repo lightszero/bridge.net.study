@@ -14,9 +14,9 @@ namespace lighttool
     public interface canvasAction
     {
         //resize 事件
-        void onresize( spriteCanvas c);
-        void ondraw( spriteCanvas c);
-        bool onpointevent(spriteCanvas c, canvaspointevent e , float x , float y);
+        void onresize(spriteCanvas c);
+        void ondraw(spriteCanvas c);
+        bool onpointevent(spriteCanvas c, canvaspointevent e, float x, float yk);
     }
     public class spriteCanvas
     {
@@ -34,40 +34,59 @@ namespace lighttool
         public spriteBatcher spriteBatcher;
 
         //draw tools
-        public void drawTexture(texture: spriteTexture, rect: spriteRect, uvrect: spriteRect = spriteRect.one, color: spriteColor = spriteColor.white)
+        public void drawTexture(spriteTexture texture, spriteRect rect, spriteRect uvrect = null, spriteColor color = null)
         {
+            if (uvrect == null)
+                uvrect = spriteRect.one;
+            if (color == null)
+                color = spriteColor.white;
             texture.draw(this.spriteBatcher, uvrect, rect, color);
         }
-        public void drawTextureCustom(texture: spriteTexture, _mat: spriteMat, rect: spriteRect, uvrect: spriteRect = spriteRect.one, color: spriteColor = spriteColor.white, color2: spriteColor = spriteColor.white)
+        public void drawTextureCustom(spriteTexture texture, spriteMat _mat, spriteRect rect, spriteRect uvrect = null, spriteColor color = null, spriteColor color2 = null)
         {
+            if (uvrect == null)
+                uvrect = spriteRect.one;
+            if (color == null)
+                color = spriteColor.white;
+            if (color2 == null)
+                color2 = spriteColor.white;
             texture.drawCustom(this.spriteBatcher, _mat, uvrect, rect, color, color2);
         }
-        public void drawSprite(atlas: string, sprite: string, rect: spriteRect, color: spriteColor = spriteColor.white)
+        public void drawSprite(string atlas, string sprite, spriteRect rect, spriteColor color = null)
         {
-            let a = atlasMgr.Instance().load(this.webgl, atlas);
+            if (color == null)
+                color = spriteColor.white;
+
+            var a = atlasMgr.Instance().load(this.webgl, atlas);
             if (a == null) return;
             var r = a.sprites[sprite];
-            if (r == undefined) return;
+            if (r == Script.Undefined) return;
             if (a.texture == null) return;
 
             a.texture.draw(this.spriteBatcher, r, rect, color);
         }
-        public void drawSpriteCustom(atlas: string, sprite: string, _mat: spriteMat, rect: spriteRect, color: spriteColor = spriteColor.white, color2: spriteColor = spriteColor.white)
+        public void drawSpriteCustom(string atlas, string sprite, spriteMat _mat, spriteRect rect, spriteColor color = null, spriteColor color2 = null)
         {
-            let a = atlasMgr.Instance().load(this.webgl, atlas);
+            if (color == null)
+                color = spriteColor.white;
+            if (color2 == null)
+                color2 = spriteColor.white;
+            var a = atlasMgr.Instance().load(this.webgl, atlas);
             if (a == null) return;
             var r = a.sprites[sprite];
-            if (r == undefined) return;
+            if (r == Script.Undefined) return;
             if (a.texture == null) return;
 
             a.texture.drawCustom(this.spriteBatcher, _mat, r, rect, color, color2);
         }
-        public void drawSprite9(atlas: string, sprite: string, rect: spriteRect, border: spriteBorder, color: spriteColor = spriteColor.white)
+        public void drawSprite9(string atlas, string sprite, spriteRect rect, spriteBorder border, spriteColor color = null)
         {
-            let a = atlasMgr.Instance().load(this.webgl, atlas);
+            if (color == null)
+                color = spriteColor.white;
+            var a = atlasMgr.Instance().load(this.webgl, atlas);
             if (a == null) return;
             var _r = a.sprites[sprite];
-            if (_r == undefined) return;
+            if (_r == Script.Undefined) return;
 
             var l = (border.l - 1) / a.texturewidth;
             var r = (border.r - 1) / a.texturewidth;
@@ -175,12 +194,16 @@ namespace lighttool
             a.texture.draw(this.spriteBatcher, this.uvrect, this.trect, color);
 
         }
-        public void drawSprite9Custom(atlas: string, sprite: string, _mat: spriteMat, rect: spriteRect, border: spriteBorder, color: spriteColor = spriteColor.white, color2: spriteColor = spriteColor.white)
+        public void drawSprite9Custom(string atlas, string sprite, spriteMat _mat, spriteRect rect, spriteBorder border, spriteColor color = null, spriteColor color2 = null)
         {
-            let a = atlasMgr.Instance().load(this.webgl, atlas);
+            if (color == null)
+                color = spriteColor.white;
+            if (color2 == null)
+                color2 = spriteColor.white;
+            var a = atlasMgr.Instance().load(this.webgl, atlas);
             if (a == null) return;
             var _r = a.sprites[sprite];
-            if (_r == undefined) return;
+            if (_r == Script.Undefined) return;
 
             var l = (border.l - 1) / a.texturewidth;
             var r = (border.r - 1) / a.texturewidth;
@@ -288,26 +311,30 @@ namespace lighttool
             a.texture.drawCustom(this.spriteBatcher, _mat, this.uvrect, this.trect, color, color2);
 
         }
-        uvrect: spriteRect = new spriteRect();
+        spriteRect uvrect = new spriteRect();
 
-        trect: spriteRect = new spriteRect();//ness
+        spriteRect trect = new spriteRect();//ness
 
         //绘制字体，只画一行，字体沿着左上角对齐，如需其他，参考源码自制
-        public void drawText(font: string, text: string, rect: spriteRect, color: spriteColor = spriteColor.white, color2: spriteColor = spriteColor.black)
+        public void drawText(string font , string text , spriteRect rect , spriteColor color = null, spriteColor color2 = null)
         {
-            let f = fontMgr.Instance().load(this.webgl, font);
+            if (color == null)
+                color = spriteColor.white;
+            if (color2 == null)
+                color2 = spriteColor.black;
+            var f = fontMgr.Instance().load(this.webgl, font);
             if (f == null) return;
-            if (f.cmap == undefined) return;
-            let xadd = 0;
-            for (let i = 0; i < text.length; i++)
+            if (f.cmap == Script.Undefined) return;
+            var xadd = 0;
+            for (var i = 0; i < text.Length; i++)
             {
-                let c = text.charAt(i);
-                let cinfo = f.cmap[c];
-                if (cinfo == undefined)
+                var c = text[i];
+                var cinfo = f.cmap[c];
+                if (cinfo == Script.Undefined)
                 {
                     continue;
                 }
-                let s = rect.h / f.lineHeight;
+                var s = rect.h / f.lineHeight;
 
                 this.trect.x = rect.x + xadd + cinfo.xOffset * s;//xadd 横移，cinfo.xOffset * s 偏移
 

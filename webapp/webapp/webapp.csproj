@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="canvas\canvas.cs" />
+    <Compile Include="canvas\canvasAdapter_Native.cs" />
+    <Compile Include="canvas\resmgr.cs" />
     <Compile Include="canvas\spritebatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1043,11 +1043,11 @@ namespace lighttool
 
             return sa;
         }
-        string textureurl;
-        int texturewidth;
-        int textureheight;
-        spriteTexture texture;
-        System.Collections.Generic.Dictionary<string, sprite> sprites = new Dictionary<string, sprite>();
+        public string textureurl;
+        public int texturewidth;
+        public int textureheight;
+        public spriteTexture texture;
+        public System.Collections.Generic.Dictionary<string, sprite> sprites = new Dictionary<string, sprite>();
         private void _parse(string txt)
         {
             var json = JSON.Parse(txt).ToDynamic();
@@ -1096,18 +1096,18 @@ namespace lighttool
     }
     public class spriteFont
     {
-        WebGLRenderingContext webgl;
-        spriteTexture texture;
-        spriteMat mat;
+        public WebGLRenderingContext webgl;
+        public spriteTexture texture;
+        public spriteMat mat;
 
-        dynamic cmap;
-        string fontname;
-        float pointSize;//像素尺寸
-        float padding;//间隔
-        float lineHeight;//行高
-        float baseline;//基线
-        float atlasWidth;
-        float atlasHeight;
+        public dynamic cmap;
+        public string fontname;
+        public float pointSize;//像素尺寸
+        public float padding;//间隔
+        public float lineHeight;//行高
+        public float baseline;//基线
+        public float atlasWidth;
+        public float atlasHeight;
         public spriteFont(WebGLRenderingContext webgl, string urlconfig, spriteTexture texture)
         {
             this.webgl = webgl;

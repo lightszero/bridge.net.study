@@ -94,7 +94,7 @@ namespace lighttool
     }
     public class atlasMgr
     {
-        private static g_this: atlasMgr;
+        private static atlasMgr g_this;
         public static atlasMgr Instance()
         {
             if (atlasMgr.g_this == null)
@@ -105,13 +105,13 @@ namespace lighttool
 
         System.Collections.Generic.Dictionary<string, atlasMgrItem> mapInfo = new System.Collections.Generic.Dictionary<string, atlasMgrItem>();
 
-        public void reg(name: string, urlatlas: string, urlatalstex: string, urlatalstex_add: string)
+        public void reg(string name, string urlatlas, string urlatalstex, string urlatalstex_add)
         {
             //重复注册处理
-            let item = this.mapInfo[name];
-            if (item != undefined)
+            var item = this.mapInfo[name];
+            if (item != Script.Undefined)
             {
-                throw new Error("you can't reg the same name");//ness
+                throw new Exception("you can't reg the same name");//ness
             }
             item = new atlasMgrItem();//ness
 
@@ -120,31 +120,32 @@ namespace lighttool
             item.urlatalstex = urlatalstex;
             item.urlatalstex_add = urlatalstex_add;
         }
-        public void unreg(name: string, disposetex: boolean)
+        public void unreg(string name, bool disposetex)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return;
+            if (item == Script.Undefined) return;
             this.unload(name, disposetex);
 
-            this.mapInfo[name] = undefined;
+            this.mapInfo.Remove(name);
+            //this.mapInfo[name] = Script.Undefined;
 
         }
-        public void regDirect(name: string, atlas: spriteAtlas)
+        public void regDirect(string name, spriteAtlas atlas)
         {
-            let item = this.mapInfo[name];
-            if (item != undefined)
+            var item = this.mapInfo[name];
+            if (item != Script.Undefined)
             {
-                throw new Error("you can't reg the same name");//ness
+                throw new Exception("you can't reg the same name");//ness
             }
             item = new atlasMgrItem();//ness
 
             this.mapInfo[name] = item;
             item.atals = atlas;
         }
-        public void unload(name: string, disposetex: boolean)
+        public void unload(string name, bool disposetex)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return;
+            if (item == Script.Undefined) return;
 
             if (disposetex)
             {
@@ -154,14 +155,14 @@ namespace lighttool
             item.atals = null;
         }
 
-        public spriteAtlas load(webgl: WebGLRenderingContext, name: string)
+        public spriteAtlas load(WebGLRenderingContext webgl, string name)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return null;
+            if (item == Script.Undefined) return null;
             if (item.atals == null)
             {
                 var tex = textureMgr.Instance().load(webgl, item.urlatalstex);
-                if (tex == undefined)
+                if (tex == Script.Undefined)
                 {
                     textureMgr.Instance().reg(item.urlatalstex, item.urlatalstex_add,
                         lighttool.textureformat.RGBA, false, true);
@@ -176,10 +177,10 @@ namespace lighttool
     }
     public class fontMgrItem
     {
-        font: spriteFont;
-        url: string;
-        urlatalstex: string;
-        urlatalstex_add: string;
+        public spriteFont font;
+        public string url;
+        public string urlatalstex;
+        public string urlatalstex_add;
     }
     public class fontMgr
     {
@@ -194,13 +195,13 @@ namespace lighttool
 
         System.Collections.Generic.Dictionary<string, fontMgrItem> mapInfo = new System.Collections.Generic.Dictionary<string, fontMgrItem>();
 
-        public void reg(name: string, urlfont: string, urlatalstex: string, urlatalstex_add: string)
+        public void reg(string name, string urlfont, string urlatalstex, string urlatalstex_add)
         {
             //重复注册处理
-            let item = this.mapInfo[name];
-            if (item != undefined)
+            var item = this.mapInfo[name];
+            if (item != Script.Undefined)
             {
-                throw new Error("you can't reg the same name");//ness
+                throw new Exception("you can't reg the same name");//ness
             }
             item = new fontMgrItem();//ness
 
@@ -209,32 +210,33 @@ namespace lighttool
             item.urlatalstex = urlatalstex;
             item.urlatalstex_add = urlatalstex_add;
         }
-        public void regDirect(name: string, font: spriteFont)
+        public void regDirect(string name, spriteFont font)
         {
-            let item = this.mapInfo[name];
-            if (item != undefined)
+            var item = this.mapInfo[name];
+            if (item != Script.Undefined)
             {
-                throw new Error("you can't reg the same name");//ness
+                throw new Exception("you can't reg the same name");//ness
             }
             item = new fontMgrItem();//ness
 
             this.mapInfo[name] = item;
             item.font = font;
         }
-        public void unreg(name: string, disposetex: boolean)
+        public void unreg(string name, bool disposetex)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return;
+            if (item == Script.Undefined) return;
             this.unload(name, disposetex);
 
-            this.mapInfo[name] = undefined;
+            this.mapInfo.Remove(name);
+            //this.mapInfo[name] = Script.Undefined;
 
         }
 
-        public void unload(name: string, disposetex: boolean)
+        public void unload(string name, bool disposetex)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return;
+            if (item == Script.Undefined) return;
 
             if (disposetex)
             {
@@ -244,14 +246,14 @@ namespace lighttool
             item.font = null;
         }
 
-        public spriteFont load(webgl: WebGLRenderingContext, name: string)
+        public spriteFont load(WebGLRenderingContext webgl, string name)
         {
             var item = this.mapInfo[name];
-            if (item == undefined) return null;
+            if (item == Script.Undefined) return null;
             if (item.font == null)
             {
                 var tex = textureMgr.Instance().load(webgl, item.urlatalstex);
-                if (tex == undefined)
+                if (tex == Script.Undefined)
                 {
                     textureMgr.Instance().reg(item.urlatalstex, item.urlatalstex_add,
                         lighttool.textureformat.GRAY, false, true);
