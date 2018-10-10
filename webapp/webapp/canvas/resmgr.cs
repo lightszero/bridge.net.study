@@ -31,12 +31,13 @@ namespace lighttool
         public void reg(string url, string urladd, textureformat format, bool mipmap, bool linear)
         {
             //重复注册处理
-            var item = this.mapInfo[url];
-            if (item != Script.Undefined)
+            if (this.mapInfo.ContainsKey(url))
+            //var item = this.mapInfo[url];
+            //if (item != Script.Undefined)
             {
                 throw new Exception("you can't reg the same name");//ness
             }
-            item = new texutreMgrItem();//ness
+            var item = new texutreMgrItem();//ness
 
             this.mapInfo[url] = item;
             item.url = url;
@@ -47,12 +48,13 @@ namespace lighttool
         }
         public void regDirect(string url, spriteTexture tex)
         {
-            var item = this.mapInfo[url];
-            if (item != Script.Undefined)
+            if (this.mapInfo.ContainsKey(url))
+            //var item = this.mapInfo[url];
+            //if (item != Script.Undefined)
             {
                 throw new Exception("you can't reg the same name");//ness
             }
-            item = new texutreMgrItem();//ness
+            var item = new texutreMgrItem();//ness
 
             this.mapInfo[url] = item;
             item.url = url;
@@ -60,24 +62,32 @@ namespace lighttool
         }
         public void unreg(string url)
         {
-            var item = this.mapInfo[url];
-            if (item == Script.Undefined) return;
+            if (this.mapInfo.ContainsKey(url) == false)
+                return;
+            //var item = this.mapInfo[url];
+            //if (item == Script.Undefined) return;
             this.unload(url);
 
             this.mapInfo[url] = null;
         }
         public void unload(string url)
         {
+            if (this.mapInfo.ContainsKey(url) == false)
+                return;
+
             var item = this.mapInfo[url];
-            if (item == Script.Undefined) return;
+            //if (item == Script.Undefined) return;
 
             item.tex.dispose();
             item.tex = null;
         }
         public spriteTexture load(WebGLRenderingContext webgl, string url)
         {
+            if (this.mapInfo.ContainsKey(url) == false)
+                return null;
+
             var item = this.mapInfo[url];
-            if (item == Script.Undefined) return null;
+            //if (item == Script.Undefined) return null;
             if (item.tex == null)
             {
                 item.tex = new spriteTexture(webgl, item.url + item.urladd, item.format, item.mipmap, item.linear);//ness
@@ -108,12 +118,13 @@ namespace lighttool
         public void reg(string name, string urlatlas, string urlatalstex, string urlatalstex_add)
         {
             //重复注册处理
-            var item = this.mapInfo[name];
-            if (item != Script.Undefined)
+            if (this.mapInfo.ContainsKey(name))
+            //var item = this.mapInfo[name];
+            //if (item != Script.Undefined)
             {
                 throw new Exception("you can't reg the same name");//ness
             }
-            item = new atlasMgrItem();//ness
+            var item = new atlasMgrItem();//ness
 
             this.mapInfo[name] = item;
             item.url = urlatlas;
@@ -132,20 +143,23 @@ namespace lighttool
         }
         public void regDirect(string name, spriteAtlas atlas)
         {
-            var item = this.mapInfo[name];
-            if (item != Script.Undefined)
+            if (this.mapInfo.ContainsKey(name))
+            //    var item = this.mapInfo[name];
+            //if (item != Script.Undefined)
             {
                 throw new Exception("you can't reg the same name");//ness
             }
-            item = new atlasMgrItem();//ness
+            var item = new atlasMgrItem();//ness
 
             this.mapInfo[name] = item;
             item.atals = atlas;
         }
         public void unload(string name, bool disposetex)
         {
+            if (this.mapInfo.ContainsKey(name) == false)
+                return;
             var item = this.mapInfo[name];
-            if (item == Script.Undefined) return;
+            //if (item == Script.Undefined) return;
 
             if (disposetex)
             {
@@ -157,8 +171,10 @@ namespace lighttool
 
         public spriteAtlas load(WebGLRenderingContext webgl, string name)
         {
+            if (this.mapInfo.ContainsKey(name) == false)
+                return null;
             var item = this.mapInfo[name];
-            if (item == Script.Undefined) return null;
+            //if (item == Script.Undefined) return null;
             if (item.atals == null)
             {
                 var tex = textureMgr.Instance().load(webgl, item.urlatalstex);

@@ -162,7 +162,7 @@ namespace lighttool
         //} = {};
         void _parser(string txt)
         {
-            var s1 = txt.Split("<--");
+            var s1 = txt.Split(new[] { "<--" }, StringSplitOptions.RemoveEmptyEntries);
             for (var i = 0; i < s1.Length; i++)
             {
                 var s2 = s1[i].Split("-->");
@@ -189,7 +189,7 @@ namespace lighttool
                     }
                 }
                 if (lastname.Length == 0) continue;
-                if (this.mapshader[lastname] == null)
+                if (this.mapshader.ContainsKey(lastname) == false)
                     this.mapshader[lastname] = new shadercode();//ness
                 if (lasttag == 1)
                     this.mapshader[lastname].vscode = sshader;
@@ -198,7 +198,7 @@ namespace lighttool
 
             }
         }
-        void parseUrl(WebGLRenderingContext webgl, string url)
+        public void parseUrl(WebGLRenderingContext webgl, string url)
         {
             lighttool.loadTool.loadText(url, (txt, err) =>
             {
@@ -208,7 +208,7 @@ namespace lighttool
             }
             );
         }
-        void parseDirect(WebGLRenderingContext webgl, string txt)
+        public void parseDirect(WebGLRenderingContext webgl, string txt)
         {
             this._parser(txt);
             this.compile(webgl);

@@ -51,7 +51,15 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="atlas\1.json.txt" />
+    <Content Include="atlas\2.json.txt" />
+    <Content Include="font\STXINGKA.font.json.txt" />
     <Content Include="index.html" />
+    <Content Include="shader\test.shader.txt" />
+    <Content Include="tex\1.jpg" />
+    <Content Include="tex\1.png" />
+    <Content Include="tex\2.png" />
+    <Content Include="tex\STXINGKA.font.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
