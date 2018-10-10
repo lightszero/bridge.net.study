@@ -36,7 +36,8 @@ namespace lighttool.Native
 
                    c.spriteBatcher.enddraw();
 
-
+                   dynamic _webgl = webgl;
+                   _webgl.flush();
                    //webgl.Flush();
 
                }, 20);
@@ -52,7 +53,7 @@ namespace lighttool.Native
                 c.height = sel.Height;
                 c.spriteBatcher.matrix = new Float32Array(new float[]{
                 1.0f * 2 / c.width, 0, 0, 0,//去掉asp的影响
-                0, 1 * -1 * 2 / c.height, 0, 0,
+                0, 1.0f * -1 * 2 / c.height, 0, 0,
                 0, 0, 1, 0,
                 -1, 1, 0, 1
             });

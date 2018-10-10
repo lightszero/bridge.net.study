@@ -328,7 +328,7 @@ namespace lighttool
             var xadd = 0;
             for (var i = 0; i < text.Length; i++)
             {
-                var c = text[i];
+                var c = text.CharAt(i);
                 var cinfo = f.cmap[c];
                 if (cinfo == Script.Undefined)
                 {

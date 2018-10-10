@@ -228,20 +228,23 @@ namespace lighttool
         }
         public void regDirect(string name, spriteFont font)
         {
-            var item = this.mapInfo[name];
-            if (item != Script.Undefined)
+            if(this.mapInfo.ContainsKey(name))
+            //var item = this.mapInfo[name];
+            //if (item != Script.Undefined)
             {
                 throw new Exception("you can't reg the same name");//ness
             }
-            item = new fontMgrItem();//ness
+            var item = new fontMgrItem();//ness
 
             this.mapInfo[name] = item;
             item.font = font;
         }
         public void unreg(string name, bool disposetex)
         {
+            if (this.mapInfo.ContainsKey(name) == false)
+                return;
             var item = this.mapInfo[name];
-            if (item == Script.Undefined) return;
+            //if (item == Script.Undefined) return;
             this.unload(name, disposetex);
 
             this.mapInfo.Remove(name);
@@ -251,8 +254,11 @@ namespace lighttool
 
         public void unload(string name, bool disposetex)
         {
+            if (this.mapInfo.ContainsKey(name) == false)
+                return;
+
             var item = this.mapInfo[name];
-            if (item == Script.Undefined) return;
+            //if (item == Script.Undefined) return;
 
             if (disposetex)
             {
@@ -264,8 +270,11 @@ namespace lighttool
 
         public spriteFont load(WebGLRenderingContext webgl, string name)
         {
+            if (this.mapInfo.ContainsKey(name) == false)
+                return null;
+
             var item = this.mapInfo[name];
-            if (item == Script.Undefined) return null;
+            //if (item == Script.Undefined) return null;
             if (item.font == null)
             {
                 var tex = textureMgr.Instance().load(webgl, item.urlatalstex);

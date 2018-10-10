@@ -185,7 +185,7 @@ namespace lighttool
                     }
                     else
                     {
-                        lastname = t.Substring(1, t.Length - 1);
+                        lastname = t.Substring(1, t.Length - 2);
                     }
                 }
                 if (lastname.Length == 0) continue;
@@ -354,11 +354,15 @@ namespace lighttool
             this.BLEND_DST_ALPHA = (int)this.webgl.GetParameter(this.webgl.BLEND_DST_ALPHA);
             //    this.webgl.blendFuncSeparate(this.webgl.ONE, this.webgl.ONE_MINUS_SRC_ALPHA,
             //        this.webgl.SRC_ALPHA, this.webgl.ONE);
-            this.CURRENT_PROGRAM = (WebGLProgram)this.webgl.GetParameter(this.webgl.CURRENT_PROGRAM);
-            this.ARRAY_BUFFER = (WebGLBuffer)this.webgl.GetParameter(this.webgl.ARRAY_BUFFER_BINDING);
+
+            var p = this.webgl.GetParameter(this.webgl.CURRENT_PROGRAM);
+            this.CURRENT_PROGRAM = p.As<WebGLProgram>();
+
+            var pb = this.webgl.GetParameter(this.webgl.ARRAY_BUFFER_BINDING);
+            this.ARRAY_BUFFER = pb.As<WebGLBuffer>();
 
             this.ACTIVE_TEXTURE = (int)this.webgl.GetParameter(this.webgl.ACTIVE_TEXTURE);
-            this.TEXTURE_BINDING_2D = (WebGLTexture)this.webgl.GetParameter(this.webgl.TEXTURE_BINDING_2D);
+            this.TEXTURE_BINDING_2D = this.webgl.GetParameter(this.webgl.TEXTURE_BINDING_2D).As<WebGLTexture>();
 
         }
         public void restore()
@@ -439,8 +443,10 @@ namespace lighttool
             this.webgl.Disable(this.webgl.CULL_FACE);
 
             this.mat = mat;
+            if (this.shaderparser.mapshader.ContainsKey(this.mat.shader) == false)
+                return;
             this.shadercode = this.shaderparser.mapshader[this.mat.shader];
-            if (this.shadercode == null) return;
+            //if (this.shadercode == null) return;
             //指定shader和vbo
 
             //关于深度 ，跟着spritebatcher走

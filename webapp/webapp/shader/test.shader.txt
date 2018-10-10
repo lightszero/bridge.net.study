@@ -1,0 +1,165 @@
+﻿<--vs "test"-->
+	attribute vec3 position;//顶点提供的数据
+	attribute vec4 color; 
+	attribute vec2 uv; 
+
+	uniform mat4 matrix;
+    //uniform mat4 uModelMatrix;//材质提供的数据
+    //uniform mat4 uViewProjMatrix;
+
+	varying vec4 vColor;//输出给fs的参数
+	varying vec2 vUv;//输出给fs的参数
+    void main(void) 
+	{
+        gl_Position =matrix * vec4(position,1);// uViewProjMatrix * uModelMatrix * position;
+		vColor = color;
+		vUv = uv;
+    }
+<-- fs "test" -->
+	precision mediump float;//指定浮点型精确度
+	varying vec4 vColor;//从vs接收的参数
+ 	varying vec2 vUv;//从vs接收的参数
+
+	uniform sampler2D tex0;  //从外部设置的参数
+	void main(void) 
+	{
+		vec4 c = texture2D(tex0, vUv);  
+        gl_FragColor = vColor * c;
+    }
+
+<--vs "testC"-->
+	attribute vec3 position;//顶点提供的数据
+	attribute vec4 color; 
+
+	uniform mat4 matrix;
+
+	varying vec4 vColor;//输出给fs的参数
+    void main(void) 
+	{
+        gl_Position =matrix * vec4(position,1);// uViewProjMatrix * uModelMatrix * position;
+		vColor = color;
+    }
+<-- fs "testC" -->
+	precision mediump float;//指定浮点型精确度
+	varying vec4 vColor;//从vs接收的参数
+
+	void main(void) 
+	{
+		vec4 cv = vColor;
+		cv.rgb*=vColor.a;//预乘alpha
+        gl_FragColor = cv;
+    }
+
+<--vs "spritedefault"-->//默认sprite材质
+	attribute vec3 position;//顶点提供的数据
+	attribute vec4 color; 
+	attribute vec2 uv; 
+
+	uniform mat4 matrix;
+    //uniform mat4 uModelMatrix;//材质提供的数据
+    //uniform mat4 uViewProjMatrix;
+
+	varying vec4 vColor;//输出给fs的参数
+	varying vec2 vUv;//输出给fs的参数
+    void main(void) 
+	{
+        gl_Position =matrix * vec4(position,1);// uViewProjMatrix * uModelMatrix * position;
+		vColor = color;
+		vUv = uv;
+    }
+<-- fs "spritedefault" -->
+	precision mediump float;//指定浮点型精确度
+	varying vec4 vColor;//从vs接收的参数
+ 	varying vec2 vUv;//从vs接收的参数
+
+	uniform sampler2D tex0;  //从外部设置的参数
+	void main(void) 
+	{
+		vec4 cv = vColor;
+		cv.rgb*=vColor.a;//预乘alpha
+
+
+		vec4 c = texture2D(tex0, vUv); //贴图已经乘过了
+        gl_FragColor = cv * c;
+    }
+	
+<--vs "spritefont"-->//sprite font材质
+	attribute vec3 position;//顶点提供的数据
+	attribute vec4 color; 
+	attribute vec4 color2; 
+	attribute vec2 uv; 
+
+	uniform mat4 matrix;
+    //uniform mat4 uModelMatrix;//材质提供的数据
+    //uniform mat4 uViewProjMatrix;
+
+	varying vec4 vColor;//输出给fs的参数
+	varying vec4 vColor2;//输出给fs的参数
+	varying vec2 vUv;//输出给fs的参数
+    void main(void) 
+	{
+        gl_Position =matrix * vec4(position,1);// uViewProjMatrix * uModelMatrix * position;
+		vColor = color;
+		vColor2 = color2;
+		vUv = uv;
+    }
+<-- fs "spritefont" -->
+	precision mediump float;//指定浮点型精确度
+	varying vec4 vColor;//从vs接收的参数
+	varying vec4 vColor2;//输出给fs的参数
+ 	varying vec2 vUv;//从vs接收的参数
+
+	uniform sampler2D tex0;  //从外部设置的参数
+	void main(void) //优化了一下描边的处理
+	{
+		float scale =10.0;//锐度
+		float d = (texture2D(tex0, vUv).r - 0.5)*scale;  //0.5开始是填充距离
+		float bd = (texture2D(tex0, vUv).r - 0.34)*scale;  //0.34开始是描边距离，调整这个值就有不同的描边
+		
+		//合成
+		float c=vColor.a * clamp ( d,0.0,1.0); 
+		float bc=vColor2.a * clamp ( bd,0.0,1.0); 
+		bc =min(1.0-c,bc);
+		gl_FragColor =vColor*c + vColor2*bc;
+    }
+
+
+
+<--vs "spritegray"-->//默认sprite材质
+	attribute vec3 position;//顶点提供的数据
+	attribute vec4 color; 
+	attribute vec2 uv; 
+
+	uniform mat4 matrix;
+    //uniform mat4 uModelMatrix;//材质提供的数据
+    //uniform mat4 uViewProjMatrix;
+
+	varying vec4 vColor;//输出给fs的参数
+	varying vec2 vUv;//输出给fs的参数
+    void main(void) 
+	{
+        gl_Position =matrix * vec4(position,1);// uViewProjMatrix * uModelMatrix * position;
+		vColor = color;
+		vUv = uv;
+    }
+<-- fs "spritegray" -->
+	precision mediump float;//指定浮点型精确度
+	varying vec4 vColor;//从vs接收的参数
+ 	varying vec2 vUv;//从vs接收的参数
+
+	uniform sampler2D tex0;  //从外部设置的参数
+	uniform vec4 col0;
+	void main(void) 
+	{
+		vec4 cv = vColor;
+		
+		cv.rgb*=vColor.a;//预乘alpha
+
+
+		vec4 c = texture2D(tex0, vUv); //贴图已经乘过了
+		c =cv*c;
+		float l = c.r*0.3+c.g*0.6+c.b*0.1;
+		c.rgb=vec3(l,l,l);
+        gl_FragColor = c * col0;
+
+    }
