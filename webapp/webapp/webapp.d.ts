@@ -26,19 +26,19 @@ declare namespace app {
 }
 
 declare namespace lighttool {
-    interface texutreMgrItem {
-        tex: lighttool.spriteTexture | null;
-        url: string | null;
-        urladd: string | null;
-        format: lighttool.textureformat;
-        mipmap: boolean;
-        linear: boolean;
+    interface atlasMgr {
+        reg(name: string | null, urlatlas: string | null, urlatalstex: string | null, urlatalstex_add: string | null): void;
+        unreg(name: string | null, disposetex: boolean): void;
+        regDirect(name: string | null, atlas: lighttool.spriteAtlas | null): void;
+        unload(name: string | null, disposetex: boolean): void;
+        load(webgl: Bridge.WebGL.WebGLRenderingContext | null, name: string | null): lighttool.spriteAtlas | null;
     }
-    interface texutreMgrItemFunc extends Function {
-        prototype: texutreMgrItem;
-        new (): texutreMgrItem;
+    interface atlasMgrFunc extends Function {
+        prototype: atlasMgr;
+        new (): atlasMgr;
+        Instance(): lighttool.atlasMgr | null;
     }
-    var texutreMgrItem: texutreMgrItemFunc;
+    var atlasMgr: atlasMgrFunc;
 
     interface textureMgr {
         reg(url: string | null, urladd: string | null, format: lighttool.textureformat, mipmap: boolean, linear: boolean): void;
@@ -111,8 +111,8 @@ declare namespace lighttool {
         pointbuf: lighttool.spritePoint[] | null;
         getReader(redOnly: boolean): lighttool.texReader | null;
         dispose(): void;
-        draw(spriteBatcher: lighttool.spriteBatcher | null, uv: lighttool.spriteRect | null, rect: lighttool.spriteRect | null, c: lighttool.spriteColor | null): void;
-        drawCustom(spriteBatcher: lighttool.spriteBatcher | null, _mat: lighttool.spriteMat | null, uv: lighttool.spriteRect | null, rect: lighttool.spriteRect | null, c: lighttool.spriteColor | null, c2: lighttool.spriteColor | null): void;
+        draw(spriteBatcher: lighttool.spriteBatcher | null, uv: lighttool.spriteRect, rect: lighttool.spriteRect, c: lighttool.spriteColor | null): void;
+        drawCustom(spriteBatcher: lighttool.spriteBatcher | null, _mat: lighttool.spriteMat | null, uv: lighttool.spriteRect, rect: lighttool.spriteRect, c: lighttool.spriteColor | null, c2: lighttool.spriteColor | null): void;
     }
     interface spriteTextureFunc extends Function {
         prototype: spriteTexture;
@@ -120,6 +120,29 @@ declare namespace lighttool {
         fromRaw(webgl: Bridge.WebGL.WebGLRenderingContext | null, img: HTMLImageElement | null, format?: lighttool.textureformat, mipmap?: boolean, linear?: boolean): lighttool.spriteTexture | null;
     }
     var spriteTexture: spriteTextureFunc;
+
+    interface spriteRect {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        getHashCode(): number;
+        equals(o: lighttool.spriteRect): boolean;
+        $clone(to: lighttool.spriteRect): lighttool.spriteRect;
+    }
+    interface spriteRectFunc extends Function {
+        prototype: spriteRect;
+        $ctor1: {
+            new (x: number, y: number, w: number, h: number): spriteRect
+        };
+        new (): spriteRect;
+        ctor: {
+            new (): spriteRect
+        };
+        one: lighttool.spriteRect;
+        zero: lighttool.spriteRect;
+    }
+    var spriteRect: spriteRectFunc;
 
     interface spritePoint {
         x: number;
@@ -169,8 +192,8 @@ declare namespace lighttool {
         atlasWidth: number;
         atlasHeight: number;
         _parse(txt: string | null): void;
-        draw(sb: lighttool.spriteBatcher | null, r: lighttool.charinfo | null, rect: lighttool.spriteRect | null, c?: lighttool.spriteColor | null, colorBorder?: lighttool.spriteColor | null): void;
-        drawChar(sb: lighttool.spriteBatcher | null, cname: string | null, rect: lighttool.spriteRect | null, c?: lighttool.spriteColor | null, colorBorder?: lighttool.spriteColor | null): void;
+        draw(sb: lighttool.spriteBatcher | null, r: lighttool.charinfo | null, rect: lighttool.spriteRect, c?: lighttool.spriteColor | null, colorBorder?: lighttool.spriteColor | null): void;
+        drawChar(sb: lighttool.spriteBatcher | null, cname: string | null, rect: lighttool.spriteRect, c?: lighttool.spriteColor | null, colorBorder?: lighttool.spriteColor | null): void;
     }
     interface spriteFontFunc extends Function {
         prototype: spriteFont;
@@ -199,13 +222,13 @@ declare namespace lighttool {
         width: number;
         height: number;
         spriteBatcher: lighttool.spriteBatcher | null;
-        drawTexture(texture: lighttool.spriteTexture | null, rect: lighttool.spriteRect | null, uvrect?: lighttool.spriteRect | null, color?: lighttool.spriteColor | null): void;
-        drawTextureCustom(texture: lighttool.spriteTexture | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect | null, uvrect?: lighttool.spriteRect | null, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
-        drawSprite(atlas: string | null, sprite: string | null, rect: lighttool.spriteRect | null, color?: lighttool.spriteColor | null): void;
-        drawSpriteCustom(atlas: string | null, sprite: string | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect | null, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
-        drawSprite9(atlas: string | null, sprite: string | null, rect: lighttool.spriteRect | null, border: lighttool.spriteBorder | null, color?: lighttool.spriteColor | null): void;
-        drawSprite9Custom(atlas: string | null, sprite: string | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect | null, border: lighttool.spriteBorder | null, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
-        drawText(font: string | null, text: string | null, rect: lighttool.spriteRect | null, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
+        drawTexture(texture: lighttool.spriteTexture | null, rect: lighttool.spriteRect, uvrect: lighttool.spriteRect, color?: lighttool.spriteColor | null): void;
+        drawTextureCustom(texture: lighttool.spriteTexture | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect, uvrect: lighttool.spriteRect, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
+        drawSprite(atlas: string | null, sprite: string | null, rect: lighttool.spriteRect, color?: lighttool.spriteColor | null): void;
+        drawSpriteCustom(atlas: string | null, sprite: string | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
+        drawSprite9(atlas: string | null, sprite: string | null, rect: lighttool.spriteRect, border: lighttool.spriteBorder | null, color?: lighttool.spriteColor | null): void;
+        drawSprite9Custom(atlas: string | null, sprite: string | null, _mat: lighttool.spriteMat | null, rect: lighttool.spriteRect, border: lighttool.spriteBorder | null, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
+        drawText(font: string | null, text: string | null, rect: lighttool.spriteRect, color?: lighttool.spriteColor | null, color2?: lighttool.spriteColor | null): void;
     }
     interface spriteCanvasFunc extends Function {
         prototype: spriteCanvas;
@@ -243,7 +266,7 @@ declare namespace lighttool {
         addQuad(ps: lighttool.spritePoint[] | null): void;
         addTri(ps: lighttool.spritePoint[] | null): void;
         addRect(ps: lighttool.spritePoint[] | null): void;
-        setRectClip(rect: lighttool.spriteRect | null): void;
+        setRectClip(rect: lighttool.spriteRect): void;
         closeRectClip(): void;
     }
     interface spriteBatcherFunc extends Function {
@@ -252,21 +275,34 @@ declare namespace lighttool {
     }
     var spriteBatcher: spriteBatcherFunc;
 
-    interface spriteAtlas {
-        webgl: Bridge.WebGL.WebGLRenderingContext | null;
-        textureurl: string | null;
-        texturewidth: number;
-        textureheight: number;
-        texture: lighttool.spriteTexture | null;
-        sprites: System.Collections.Generic.Dictionary$2<string,lighttool.sprite> | null;
-        drawByTexture(sb: lighttool.spriteBatcher | null, sname: string | null, rect: lighttool.spriteRect | null, c: lighttool.spriteColor | null): void;
+    interface texutreMgrItem {
+        tex: lighttool.spriteTexture | null;
+        url: string | null;
+        urladd: string | null;
+        format: lighttool.textureformat;
+        mipmap: boolean;
+        linear: boolean;
     }
-    interface spriteAtlasFunc extends Function {
-        prototype: spriteAtlas;
-        new (webgl: Bridge.WebGL.WebGLRenderingContext | null, atlasurl: string | null, texture: lighttool.spriteTexture | null): spriteAtlas;
-        fromRaw(webgl: Bridge.WebGL.WebGLRenderingContext | null, txt: string | null, texture?: lighttool.spriteTexture | null): lighttool.spriteAtlas | null;
+    interface texutreMgrItemFunc extends Function {
+        prototype: texutreMgrItem;
+        new (): texutreMgrItem;
     }
-    var spriteAtlas: spriteAtlasFunc;
+    var texutreMgrItem: texutreMgrItemFunc;
+
+    interface sprite {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        xsize: number;
+        ysize: number;
+        ToRect(): lighttool.spriteRect;
+    }
+    interface spriteFunc extends Function {
+        prototype: sprite;
+        new (): sprite;
+    }
+    var sprite: spriteFunc;
 
     interface shaderParser {
         mapshader: System.Collections.Generic.Dictionary$2<string,lighttool.shadercode> | null;
@@ -384,20 +420,6 @@ declare namespace lighttool {
     }
     var atlasMgrItem: atlasMgrItemFunc;
 
-    interface atlasMgr {
-        reg(name: string | null, urlatlas: string | null, urlatalstex: string | null, urlatalstex_add: string | null): void;
-        unreg(name: string | null, disposetex: boolean): void;
-        regDirect(name: string | null, atlas: lighttool.spriteAtlas | null): void;
-        unload(name: string | null, disposetex: boolean): void;
-        load(webgl: Bridge.WebGL.WebGLRenderingContext | null, name: string | null): lighttool.spriteAtlas | null;
-    }
-    interface atlasMgrFunc extends Function {
-        prototype: atlasMgr;
-        new (): atlasMgr;
-        Instance(): lighttool.atlasMgr | null;
-    }
-    var atlasMgr: atlasMgrFunc;
-
     interface canvasAction {
         lighttool$canvasAction$onresize(c: lighttool.spriteCanvas | null): void;
         onresize(c: lighttool.spriteCanvas | null): void;
@@ -407,29 +429,21 @@ declare namespace lighttool {
         onpointevent(c: lighttool.spriteCanvas | null, e: lighttool.canvaspointevent, x: number, yk: number): boolean;
     }
 
-    interface spriteRect {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
+    interface spriteAtlas {
+        webgl: Bridge.WebGL.WebGLRenderingContext | null;
+        textureurl: string | null;
+        texturewidth: number;
+        textureheight: number;
+        texture: lighttool.spriteTexture | null;
+        sprites: System.Collections.Generic.Dictionary$2<string,lighttool.sprite> | null;
+        drawByTexture(sb: lighttool.spriteBatcher | null, sname: string | null, rect: lighttool.spriteRect, c: lighttool.spriteColor | null): void;
     }
-    interface spriteRectFunc extends Function {
-        prototype: spriteRect;
-        new (x: number, y: number, w: number, h: number): spriteRect;
-        one: lighttool.spriteRect | null;
-        zero: lighttool.spriteRect | null;
+    interface spriteAtlasFunc extends Function {
+        prototype: spriteAtlas;
+        new (webgl: Bridge.WebGL.WebGLRenderingContext | null, atlasurl: string | null, texture: lighttool.spriteTexture | null): spriteAtlas;
+        fromRaw(webgl: Bridge.WebGL.WebGLRenderingContext | null, txt: string | null, texture?: lighttool.spriteTexture | null): lighttool.spriteAtlas | null;
     }
-    var spriteRect: spriteRectFunc;
-
-    interface sprite extends lighttool.spriteRect {
-        xsize: number;
-        ysize: number;
-    }
-    interface spriteFunc extends Function {
-        prototype: sprite;
-        new (): sprite;
-    }
-    var sprite: spriteFunc;
+    var spriteAtlas: spriteAtlasFunc;
 
 }
 

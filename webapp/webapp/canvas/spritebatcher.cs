@@ -232,7 +232,7 @@ namespace lighttool
         }
     }
     //sprite 基本数据结构
-    public class spriteRect
+    public struct spriteRect
     {
         public spriteRect(float x = 0, float y = 0, float w = 0, float h = 0)
         {
@@ -657,10 +657,10 @@ namespace lighttool
                 var hsize = ymax - ymin;
                 var usize = umax - umin;
                 var vsize = vmax - vmin;
-                var xl = Math.Max(xmin, this.rectClip.x);
-                var xr = Math.Min(xmax, this.rectClip.x + this.rectClip.w);
-                var yt = Math.Max(ymin, this.rectClip.y);
-                var yb = Math.Min(ymax, this.rectClip.y + this.rectClip.h);
+                var xl = Math.Max(xmin, this.rectClip.Value.x);
+                var xr = Math.Min(xmax, this.rectClip.Value.x + this.rectClip.Value.w);
+                var yt = Math.Max(ymin, this.rectClip.Value.y);
+                var yb = Math.Min(ymax, this.rectClip.Value.y + this.rectClip.Value.h);
                 var lf = (xl - xmin) / wsize;
                 var tf = (yt - ymin) / hsize;
                 var rf = (xr - xmax) / wsize;
@@ -737,7 +737,7 @@ namespace lighttool
             }
         }
 
-        public spriteRect rectClip = null;
+        public spriteRect? rectClip = null;
         public void setRectClip(spriteRect rect)
         {
             this.rectClip = rect;
@@ -1013,14 +1013,18 @@ namespace lighttool
         }
     }
 
-    public class sprite : spriteRect
+    public class sprite// : spriteRect
     {
-        //public float x;
-        //public float y;
-        //public float w;
-        //public float h;
+        public float x;
+        public float y;
+        public float w;
+        public float h;
         public float xsize;
         public float ysize;
+        public spriteRect ToRect()
+        {
+            return new spriteRect(x, y, w, h);
+        }
     }
     //atlas
     public class spriteAtlas
@@ -1082,7 +1086,7 @@ namespace lighttool
             var r = this.sprites[sname];
             if (r == Script.Undefined) return;
 
-            this.texture.draw(sb, r, rect, c);
+            this.texture.draw(sb, r.ToRect(), rect, c);
         }
 
     }

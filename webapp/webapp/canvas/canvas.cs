@@ -34,18 +34,18 @@ namespace lighttool
         public spriteBatcher spriteBatcher;
 
         //draw tools
-        public void drawTexture(spriteTexture texture, spriteRect rect, spriteRect uvrect = null, spriteColor color = null)
+        public void drawTexture(spriteTexture texture, spriteRect rect, spriteRect uvrect , spriteColor color = null)
         {
-            if (uvrect == null)
-                uvrect = spriteRect.one;
+            //if (uvrect == null)
+            //    uvrect = spriteRect.one;
             if (color == null)
                 color = spriteColor.white;
             texture.draw(this.spriteBatcher, uvrect, rect, color);
         }
-        public void drawTextureCustom(spriteTexture texture, spriteMat _mat, spriteRect rect, spriteRect uvrect = null, spriteColor color = null, spriteColor color2 = null)
+        public void drawTextureCustom(spriteTexture texture, spriteMat _mat, spriteRect rect, spriteRect uvrect , spriteColor color = null, spriteColor color2 = null)
         {
-            if (uvrect == null)
-                uvrect = spriteRect.one;
+            //if (uvrect == null)
+            //    uvrect = spriteRect.one;
             if (color == null)
                 color = spriteColor.white;
             if (color2 == null)
@@ -63,7 +63,7 @@ namespace lighttool
             if (r == Script.Undefined) return;
             if (a.texture == null) return;
 
-            a.texture.draw(this.spriteBatcher, r, rect, color);
+            a.texture.draw(this.spriteBatcher, r.ToRect(), rect, color);
         }
         public void drawSpriteCustom(string atlas, string sprite, spriteMat _mat, spriteRect rect, spriteColor color = null, spriteColor color2 = null)
         {
@@ -77,7 +77,7 @@ namespace lighttool
             if (r == Script.Undefined) return;
             if (a.texture == null) return;
 
-            a.texture.drawCustom(this.spriteBatcher, _mat, r, rect, color, color2);
+            a.texture.drawCustom(this.spriteBatcher, _mat, r.ToRect(), rect, color, color2);
         }
         public void drawSprite9(string atlas, string sprite, spriteRect rect, spriteBorder border, spriteColor color = null)
         {
